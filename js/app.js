@@ -4,6 +4,18 @@
 
   var cfg = window.MailConfig;
   var C = window.MailCalc;
+  var ZIPS = C.parseZips(window.MailZips);
+  var zipByCode = {};
+  ZIPS.forEach(function (z) { zipByCode[z.zip] = z; });
+  var counties = [];
+  ZIPS.forEach(function (z) { if (counties.indexOf(z.county) < 0) counties.push(z.county); });
+
+  /** A starting selection so the first view shows a real price: ZIPs in list order until 10,000 homes. */
+  function starterZips() {
+    var out = [], n = 0;
+    for (var i = 0; i < ZIPS.length && n < 10000; i++) { out.push(ZIPS[i].zip); n += ZIPS[i].homes; }
+    return out;
+  }
   var $ = function (id) { return document.getElementById(id); };
   var money = function (n) { return (n < 0 ? '−' : '') + '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
   var int = function (n) { return Math.round(n).toLocaleString('en-US'); };
@@ -12,11 +24,11 @@
   var state = {
     productId: 'fullpage',
     sizeId: null,
-    homes: 10000,
+    zips: starterZips(),
+    homes: 0,
     mailings: 1,
     rush: false,
     promo: '',
-    counties: '',
     inHome: '',
   };
   var files = [];
@@ -42,13 +54,35 @@
       '<path d="M' + (2 + w * 0.15) + ' ' + (2 + h * 0.3) + 'h' + (w * 0.7) + 'M' + (2 + w * 0.15) + ' ' + (2 + h * 0.38) + 'h' + (w * 0.5) + '"/></svg>';
   }
 
-  /* ---------- homes slider (log scale) ---------- */
-  var sMin = cfg.minHomes, sMax = cfg.quickPicks[cfg.quickPicks.length - 1];
-  function toSlider(h) { return Math.round(1000 * Math.log(Math.min(sMax, Math.max(sMin, h)) / sMin) / Math.log(sMax / sMin)); }
-  function fromSlider(v) {
-    var h = sMin * Math.pow(sMax / sMin, v / 1000);
-    var step = h < 10000 ? 500 : h < 50000 ? 1000 : 5000;
-    return Math.round(h / step) * step;
+  /* ---------- ZIP codes ---------- */
+  function isChosen(zip) { return state.zips.indexOf(zip) >= 0; }
+  function chosenCounties() {
+    return counties.filter(function (c) { return state.zips.some(function (z) { return zipByCode[z].county === c; }); });
+  }
+  function renderZips() {
+    var q = $('zip-search').value.trim().toLowerCase();
+    var html = counties.map(function (county) {
+      var all = ZIPS.filter(function (z) { return z.county === county; });
+      var shown = all.filter(function (z) { return !q || z.zip.indexOf(q) === 0 || z.city.toLowerCase().indexOf(q) >= 0 || county.toLowerCase().indexOf(q) >= 0; });
+      if (!shown.length) return '';
+      var picked = all.filter(function (z) { return isChosen(z.zip); });
+      var allOn = picked.length === all.length;
+      var homes = all.reduce(function (s, z) { return s + z.homes; }, 0);
+      return '<fieldset class="zip-group"><legend><span><b>' + esc(county) + ' County</b> <span class="muted">' + all.length + ' ZIPs · ' + int(homes) + ' homes</span></span>' +
+        '<button type="button" class="linkbtn" data-county="' + esc(county) + '" data-on="' + (allOn ? 0 : 1) + '">' + (allOn ? 'Clear county' : 'Select all') + '</button></legend>' +
+        '<div class="zip-list">' + shown.map(function (z) {
+          return '<label class="zip"><input type="checkbox" value="' + z.zip + '"' + (isChosen(z.zip) ? ' checked' : '') + '>' +
+            '<span class="zip-code">' + z.zip + '</span><span class="zip-city">' + esc(z.city) + '</span><span class="zip-homes">' + int(z.homes) + '</span></label>';
+        }).join('') + '</div></fieldset>';
+    }).join('');
+    $('zip-groups').innerHTML = html || '<p class="muted">No ZIP codes in our area match “' + esc(q) + '”.</p>';
+  }
+  function renderTally() {
+    var n = state.zips.length;
+    $('zip-tally').innerHTML = n
+      ? '<div><b>' + int(state.homes) + '</b> homes</div><div class="muted">' + n + ' ZIP code' + (n > 1 ? 's' : '') + ' · ' + esc(chosenCounties().join(', ')) + '</div>' +
+        '<button type="button" class="linkbtn" id="zip-clear">Clear all</button>'
+      : '<div><b>0</b> homes</div><div class="muted">No ZIP codes picked yet</div>';
   }
 
   /* ---------- render: build ---------- */
@@ -83,10 +117,6 @@
     $('foot-email').textContent = b.email; $('foot-email').href = 'mailto:' + b.email;
     $('foot-phone').textContent = b.phone; $('foot-phone').href = 'tel:' + b.phone.replace(/[^0-9+]/g, '');
 
-    $('homes-range').min = 0; $('homes-range').max = 1000; $('homes-range').step = 1;
-    $('quick-picks').innerHTML = cfg.quickPicks.map(function (q) {
-      return '<button type="button" data-homes="' + q + '">' + int(q) + '</button>';
-    }).join('');
     var br = cfg.breaks.slice(1).map(function (b) { return b >= 1000 ? (b / 1000) + 'k' : b; });
     $('homes-hint').textContent = 'Minimum ' + int(cfg.minHomes) + '. Your price per home drops at ' +
       br.slice(0, -1).join(', ') + ' and ' + br[br.length - 1] + '.';
@@ -107,23 +137,25 @@
 
   function update() {
     var p = product();
+    state.homes = C.homesForZips(ZIPS, state.zips);
     current = C.priceOrder(cfg, state);
 
     $('postage-note').textContent = '✓ ' + p.postageNote;
     $('spec').innerHTML = sizeShape(current.size) + '<div><b>' + esc(p.name) + ' · ' + esc(current.size.dims) + '</b>' +
       '<span class="muted">' + esc(current.size.spec.charAt(0).toUpperCase() + current.size.spec.slice(1)) + '. Designed by our in-house team.</span></div>';
 
-    if (document.activeElement !== $('homes')) $('homes').value = state.homes;
-    $('homes-range').value = toSlider(state.homes);
-    $('homes-range').style.setProperty('--pct', ($('homes-range').value / 10) + '%');
-    Array.prototype.forEach.call($('quick-picks').children, function (b) { b.setAttribute('aria-pressed', +b.dataset.homes === state.homes); });
+    renderTally();
+    if (state.homes >= cfg.minHomes) $('zip-error').hidden = true;
     Array.prototype.forEach.call($('mailings').children, function (b) { b.setAttribute('aria-checked', +b.dataset.mailings === state.mailings); });
     $('rush').checked = state.rush;
 
     var summary = p.name + ' · ' + current.size.dims + ' · ' + int(current.homes) + ' homes' +
       (current.mailings > 1 ? ' · ' + current.mailings + ' mailings' : '');
     $('order-name').textContent = summary;
-    $('order-notes').innerHTML = current.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('');
+    var notes = state.homes < cfg.minHomes
+      ? ['Pick ZIP codes totaling at least ' + int(cfg.minHomes) + ' homes. ' + (state.homes ? 'You have ' + int(state.homes) + ', so this is priced at the minimum.' : 'This is priced at the minimum.')]
+      : current.notes;
+    $('order-notes').innerHTML = notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('');
     $('order-lines').innerHTML = linesHtml(current);
     $('order-total').textContent = money(current.total);
     $('per-home').innerHTML = '<b>' + (current.perHome * 100).toFixed(1) + '¢</b> per home reached · ' + int(current.pieces) + ' total pieces';
@@ -139,27 +171,31 @@
   /* ---------- events: build ---------- */
   $('products').addEventListener('change', function (e) { state.productId = e.target.value; renderSizes(); update(); });
   $('sizes').addEventListener('change', function (e) { state.sizeId = e.target.value; update(); });
-  $('homes-range').addEventListener('input', function (e) { state.homes = fromSlider(+e.target.value); update(); });
-  $('homes').addEventListener('input', function (e) {
-    var n = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
-    state.homes = isFinite(n) ? n : 0;
-    update();
+  $('zip-search').addEventListener('input', renderZips);
+  $('zip-groups').addEventListener('change', function (e) {
+    if (e.target.type !== 'checkbox') return;
+    var z = e.target.value;
+    state.zips = state.zips.filter(function (x) { return x !== z; });
+    if (e.target.checked) state.zips.push(z);
+    update(); renderZips();
   });
-  $('homes').addEventListener('blur', function () {
-    state.homes = C.clampHomes(cfg, state.homes); $('homes').value = state.homes; update();
+  $('zip-groups').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-county]'); if (!b) return;
+    var county = b.dataset.county, on = b.dataset.on === '1';
+    var inCounty = ZIPS.filter(function (z) { return z.county === county; }).map(function (z) { return z.zip; });
+    state.zips = state.zips.filter(function (x) { return inCounty.indexOf(x) < 0; });
+    if (on) state.zips = state.zips.concat(inCounty);
+    update(); renderZips();
   });
-  $('quick-picks').addEventListener('click', function (e) {
-    var b = e.target.closest('button'); if (!b) return;
-    state.homes = +b.dataset.homes; $('homes').value = state.homes; update();
+  $('zip-tally').addEventListener('click', function (e) {
+    if (e.target.id !== 'zip-clear') return;
+    state.zips = []; update(); renderZips();
   });
   $('mailings').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
     state.mailings = +b.dataset.mailings; update();
   });
   $('rush').addEventListener('change', function (e) { state.rush = e.target.checked; update(); });
-  $('counties').addEventListener('input', function (e) {
-    state.counties = e.target.value; if (state.counties.trim()) { $('counties-error').hidden = true; e.target.classList.remove('invalid'); } save();
-  });
   $('in-home').addEventListener('input', function (e) { state.inHome = e.target.value; save(); });
   $('files').addEventListener('change', function (e) {
     files = Array.prototype.slice.call(e.target.files || []);
@@ -170,15 +206,15 @@
   $('promo-form').addEventListener('submit', function (e) { e.preventDefault(); state.promo = $('promo').value.trim(); update(); });
 
   $('to-checkout').addEventListener('click', function () {
-    if (!state.counties.trim()) {
-      $('counties-error').hidden = false;
-      $('counties').classList.add('invalid');
-      $('counties').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      $('counties').focus({ preventScroll: true });
+    if (state.homes < cfg.minHomes) {
+      var ze = $('zip-error');
+      ze.hidden = false;
+      ze.textContent = state.zips.length
+        ? 'Your ZIP codes reach ' + int(state.homes) + ' homes. Add more to reach the ' + int(cfg.minHomes) + '-home minimum.'
+        : 'Pick at least one ZIP code so we know where to mail.';
+      $('h-homes').scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
-    state.homes = C.clampHomes(cfg, state.homes);
-    update();
     renderCheckout();
     show('checkout');
   });
@@ -187,7 +223,8 @@
   function renderCheckout() {
     $('co-name').textContent = $('order-name').textContent;
     var facts = [
-      ['Counties', state.counties],
+      ['ZIP codes', state.zips.slice().sort().join(', ')],
+      ['Counties', chosenCounties().join(', ')],
       ['In-home date', state.inHome || 'Flexible'],
       ['Rush', state.rush ? 'Yes' : 'No'],
       ['Files', files.length ? files.length + ' attached' : 'None'],
@@ -237,7 +274,8 @@
         mailings: current.mailings,
         ratePerHome: current.rate,
         rush: state.rush,
-        counties: state.counties.trim(),
+        counties: chosenCounties(),
+        zips: state.zips.slice().sort().map(function (z) { var r = zipByCode[z]; return { zip: r.zip, city: r.city, county: r.county, homes: r.homes }; }),
         inHomeDate: state.inHome.trim(),
         promo: current.promo ? current.promo.code : '',
       },
@@ -281,8 +319,8 @@
 
   $('new-order').addEventListener('click', function () {
     $('checkout-form').reset();
-    state.counties = ''; state.inHome = ''; state.promo = ''; state.rush = false; state.mailings = 1;
-    $('counties').value = ''; $('in-home').value = ''; $('promo').value = '';
+    state.zips = starterZips(); state.inHome = ''; state.promo = ''; state.rush = false; state.mailings = 1;
+    $('zip-search').value = ''; renderZips(); $('in-home').value = ''; $('promo').value = '';
     files = []; $('files').value = ''; $('files').dispatchEvent(new Event('change'));
     update();
     show('build');
@@ -306,7 +344,8 @@
       var s = JSON.parse(localStorage.getItem('bdd-quote') || 'null');
       if (s && typeof s === 'object') Object.keys(state).forEach(function (k) { if (k in s) state[k] = s[k]; });
     } catch (e) { /* ignore */ }
-    $('counties').value = state.counties || '';
+    // Keep only ZIPs that are still in the distribution list.
+    state.zips = (Array.isArray(state.zips) ? state.zips : []).filter(function (z, i, a) { return zipByCode[z] && a.indexOf(z) === i; });
     $('in-home').value = state.inHome || '';
     $('promo').value = state.promo || '';
   }
@@ -315,5 +354,6 @@
   renderStatic();
   renderProducts();
   renderSizes();
+  renderZips();
   update();
 })();

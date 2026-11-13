@@ -113,6 +113,29 @@
     };
   }
 
+  /**
+   * Parse the distribution list (one "zip, city, county, homes" per line, commas or tabs).
+   * Skips blank lines, a header row and lines without a 5-digit ZIP. Later duplicates win.
+   */
+  function parseZips(text) {
+    var map = {};
+    String(text || '').split(/\r?\n/).forEach(function (line) {
+      var parts = line.split(/\t|,/).map(function (s) { return s.trim(); });
+      var zip = (parts[0] || '').replace(/[^0-9]/g, '');
+      if (!/^\d{5}$/.test(zip)) return;
+      map[zip] = { zip: zip, city: parts[1] || '', county: parts[2] || 'Other', homes: Math.max(0, Math.round(num(parts.slice(3).join('')))) };
+    });
+    return Object.keys(map).map(function (k) { return map[k]; })
+      .sort(function (a, b) { return a.county.localeCompare(b.county) || a.zip.localeCompare(b.zip); });
+  }
+
+  /** Total homes in the chosen ZIPs (unknown ZIPs count as 0). */
+  function homesForZips(list, chosen) {
+    var set = {};
+    (chosen || []).forEach(function (z) { set[z] = true; });
+    return list.reduce(function (s, z) { return s + (set[z.zip] ? z.homes : 0); }, 0);
+  }
+
   /** Short readable order number like BD-261113-4F7Q. */
   function orderNumber(date, rand) {
     var d = date || new Date();
@@ -132,6 +155,8 @@
     mailingPct: mailingPct,
     findPromo: findPromo,
     clampHomes: clampHomes,
+    parseZips: parseZips,
+    homesForZips: homesForZips,
     orderNumber: orderNumber,
     validEmail: validEmail,
     round2: round2,

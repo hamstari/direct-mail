@@ -62,3 +62,19 @@ test('order numbers and email check', () => {
   assert.ok(C.validEmail('a@b.co'));
   assert.ok(!C.validEmail('nope@'));
 });
+
+test('distribution ZIP list parses commas, tabs, header and duplicates', () => {
+  const thousands = C.parseZips('33004, Dania Beach, Broward, 6,200');
+  assert.equal(thousands[0].homes, 6200);
+  const list = C.parseZips('zip,city,county,homes\n33004, Dania Beach, Broward, 6,200\n\n33401\tWest Palm\tPalm Beach\t7600\nbad line\n33004,Dania,Broward,6300');
+  assert.equal(list.length, 2);
+  assert.deepEqual(list.map((z) => z.zip), ['33004', '33401']);
+  assert.equal(list[0].homes, 6300);
+  assert.equal(C.homesForZips(list, ['33004', '33401', '99999']), 13900);
+});
+
+test('sample distribution list loads', () => {
+  const list = C.parseZips(require('../js/zips.js'));
+  assert.ok(list.length > 5);
+  assert.ok(list.every((z) => z.homes > 0 && z.county));
+});

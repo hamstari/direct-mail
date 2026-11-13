@@ -42,12 +42,12 @@
         </section>
 
         <section class="card" aria-labelledby="h-homes">
-          <h2 id="h-homes"><span class="num">3</span> How many homes?</h2>
-          <div class="homes-row">
-            <input type="range" id="homes-range" aria-label="Homes" step="500">
-            <input type="text" inputmode="numeric" id="homes" aria-label="Number of homes" autocomplete="off">
-          </div>
-          <div class="chips" id="quick-picks" aria-label="Quick picks"></div>
+          <h2 id="h-homes"><span class="num">3</span> Where should it mail?</h2>
+          <p class="muted" id="zip-intro">Pick the ZIP codes in our distribution area. Your home count comes from the ZIPs you choose.</p>
+          <div class="zip-tally" id="zip-tally" aria-live="polite"></div>
+          <input type="search" id="zip-search" placeholder="Search ZIP or city" aria-label="Search ZIP codes or cities" autocomplete="off">
+          <div class="zip-groups" id="zip-groups"></div>
+          <p class="field-error" id="zip-error" hidden></p>
           <p class="muted small" id="homes-hint"></p>
         </section>
 
@@ -69,10 +69,6 @@
             </div>
             <label class="switch"><input type="checkbox" id="rush" role="switch" aria-labelledby="l-rush"><span></span></label>
           </div>
-
-          <label class="label" for="counties">Counties where you do business <span class="req">*</span></label>
-          <input type="text" id="counties" placeholder="e.g. Broward, Palm Beach" autocomplete="off">
-          <p class="field-error" id="counties-error" hidden>Tell us at least one county so we know where to mail.</p>
 
           <label class="label" for="in-home">Preferred in-home date <span class="muted">(optional)</span></label>
           <input type="text" id="in-home" placeholder="e.g. Dec 1" autocomplete="off">
@@ -185,6 +181,7 @@
   </footer>
 
   <script src="js/config.js"></script>
+  <script src="js/zips.js"></script>
   <script src="js/calc.js"></script>
   <script src="js/app.js"></script>
 </body>
