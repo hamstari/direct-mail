@@ -1,0 +1,19 @@
+<!--
+  Paste this where the calculator should appear on your website
+  (WordPress "Custom HTML" block, Wix "Embed code", Squarespace "Code" block, etc.).
+  Change the src to wherever you uploaded the direct-mail folder.
+-->
+<iframe id="bdd-calculator" src="https://YOUR-SITE.com/direct-mail/index.html"
+  title="Best Deals Direct order calculator"
+  style="width:100%;border:0;min-height:900px;display:block" loading="lazy"></iframe>
+<script>
+  (function () {
+    var f = document.getElementById('bdd-calculator');
+    window.addEventListener('message', function (e) {
+      var d = e.data;
+      if (!d || !d.bestDealsDirect || e.source !== f.contentWindow) return;
+      if (d.height) f.style.height = d.height + 'px';
+      if (d.scroll === 'top') f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  })();
+</script>

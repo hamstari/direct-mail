@@ -25,11 +25,32 @@ Edit `js/config.js`: products, sizes, price per home at each break, mailing disc
 
 > Only the Full Page Pop Out Insert at 10,000 homes ($0.187/home → $2,053.33 total with $49 setup and 7% tax) came from the live price sheet. **Every other rate, size, the rush % and the promo codes are placeholders.**
 
-## Receive orders
+## Receive orders (Zapier or Make)
 
-By default the page runs in **demo mode**: orders are shown but not sent. Set `checkout.orderEndpoint` in `js/config.js` to any URL that accepts a multipart POST (Formspree, Zapier/Make webhook, your server). It receives `order` (JSON: customer, mailer choices, line items, totals) plus attached files.
+Until you add a webhook, the page runs in **demo mode**: customers see the confirmation, but the order goes nowhere.
 
-Pricing runs in the browser, so check the total before you charge. `js/calc.js` also works in Node if your server should recalculate it.
+**Zapier**
+1. Create a Zap. Trigger: **Webhooks by Zapier → Catch Hook**. Copy the URL it gives you.
+2. Paste that URL into `checkout.orderEndpoint` in `js/config.js`.
+3. Place one test order on the page, then click **Test trigger** in Zapier to see the fields.
+4. Add actions, for example **Gmail → Send email** to yourself and **Google Sheets → Create row**.
+
+**Make**: the same, using a **Webhooks → Custom webhook** module.
+
+Every order arrives as simple fields you can map straight into an email or sheet:
+
+`order_number`, `placed_at`, `customer_name`, `company`, `customer_email`, `customer_phone`, `website`, `services`, `billing_address`, `billing_city`, `billing_state`, `billing_zip`, `payment_method`, `notes`, `mail_option`, `ad_size`, `paper`, `homes`, `mailings`, `total_pieces`, `zip_codes`, `zip_detail`, `counties`, `in_home_date`, `rush`, `promo_code`, `rate_per_home`, `setup_fee`, `rush_fee`, `subtotal`, `sales_tax`, `total`, `file_names`, `line_items`
+
+It also sends `order` (the full order as JSON) and any logo or photo files as `files`.
+
+Prices are calculated in the customer's browser, so check the total on each order before you charge. Nothing is charged automatically: you send the card link or invoice after the proof is approved.
+
+## Put it on your website
+
+1. Upload the whole folder (`index.html`, `css/`, `js/`) to your web host, for example as `yoursite.com/direct-mail/`. Then you can link straight to `yoursite.com/direct-mail/index.html`.
+2. Or embed it inside an existing page: open `embed-snippet.html`, change the `src` to where you uploaded the folder, and paste the code into a WordPress "Custom HTML" block, a Wix "Embed code" element, or a Squarespace "Code" block. The frame grows to fit the calculator, so there is no inner scroll bar.
+
+If your website builder can't host files (Wix, Squarespace), host the folder for free on GitHub Pages or Netlify and use that address in the embed code.
 
 ## Run it
 
@@ -48,4 +69,5 @@ npm test    # pricing tests (Node 18+)
 - `js/zips.js`: your distribution ZIP codes and homes per ZIP
 - `js/calc.js`: pricing math (shared by the page and the tests)
 - `js/app.js`: page behavior
+- `embed-snippet.html`: code to paste into your website
 - `tests/calc.test.js`: tests

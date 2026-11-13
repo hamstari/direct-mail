@@ -78,3 +78,22 @@ test('sample distribution list loads', () => {
   assert.ok(list.length > 5);
   assert.ok(list.every((z) => z.homes > 0 && z.county));
 });
+
+test('webhook fields are flat and complete', () => {
+  const r = C.priceOrder(cfg, { ...base, mailings: 3, rush: true });
+  const order = {
+    number: 'BD-1', placedAt: 'now', files: ['logo.png'],
+    customer: { name: 'Pat', company: 'Roofs Inc', email: 'p@r.co', phone: '555', payment: 'invoice', address: '1 St', city: 'X', state: 'FL', zip: '33000' },
+    mailer: { option: 'Full Page Pop Out Insert', size: '8.375" × 10.875"', homes: 10000, mailings: 3, rush: true, counties: ['Broward'],
+      zips: [{ zip: '33004', city: 'Dania Beach', county: 'Broward', homes: 6200 }, { zip: '33009', city: 'Hallandale Beach', county: 'Broward', homes: 3800 }] },
+    lines: r.lines.map((l) => ({ label: l.label, amount: l.amount, included: l.kind === 'included' })),
+    subtotal: r.subtotal, tax: r.tax, total: r.total,
+  };
+  const f = C.flattenOrder(order);
+  assert.equal(f.zip_codes, '33004, 33009');
+  assert.equal(f.total_pieces, '30000');
+  assert.equal(f.total, r.total.toFixed(2));
+  assert.equal(f.setup_fee, '49.00');
+  assert.equal(f.rush, 'Yes');
+  assert.ok(Object.values(f).every((v) => v === undefined || typeof v === 'string'));
+});

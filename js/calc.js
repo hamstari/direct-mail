@@ -147,6 +147,38 @@
     return 'BD-' + String(d.getFullYear()).slice(2) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + code;
   }
 
+  /**
+   * One-level fields for webhooks (Zapier, Make, sheets): easy to map, no nested JSON.
+   * order: the object built at checkout.
+   */
+  function flattenOrder(order) {
+    var c = order.customer || {}, m = order.mailer || {};
+    var money2 = function (n) { return (Math.round(n * 100) / 100).toFixed(2); };
+    var fee = function (re) {
+      var l = (order.lines || []).filter(function (x) { return re.test(x.label); })[0];
+      return l ? money2(l.amount) : '0.00';
+    };
+    return {
+      order_number: order.number,
+      placed_at: order.placedAt,
+      customer_name: c.name, company: c.company, customer_email: c.email, customer_phone: c.phone,
+      website: c.website, services: c.services,
+      billing_address: c.address, billing_city: c.city, billing_state: c.state, billing_zip: c.zip,
+      payment_method: c.payment, notes: c.notes,
+      mail_option: m.option, ad_size: m.size, paper: m.spec,
+      homes: String(m.homes), mailings: String(m.mailings), total_pieces: String(m.homes * m.mailings),
+      zip_codes: (m.zips || []).map(function (z) { return z.zip; }).join(', '),
+      zip_detail: (m.zips || []).map(function (z) { return z.zip + ' ' + z.city + ' (' + z.county + ') ' + z.homes; }).join('; '),
+      counties: (m.counties || []).join(', '),
+      in_home_date: m.inHomeDate, rush: m.rush ? 'Yes' : 'No', promo_code: m.promo,
+      rate_per_home: String(m.ratePerHome),
+      setup_fee: fee(/^Setup/), rush_fee: fee(/^Rush/),
+      subtotal: money2(order.subtotal), sales_tax: money2(order.tax), total: money2(order.total),
+      file_names: (order.files || []).join(', '),
+      line_items: (order.lines || []).map(function (l) { return l.label + ': ' + (l.included ? 'Included' : money2(l.amount)); }).join('\n'),
+    };
+  }
+
   function validEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(s || '').trim()); }
 
   var api = {
@@ -159,6 +191,7 @@
     homesForZips: homesForZips,
     orderNumber: orderNumber,
     validEmail: validEmail,
+    flattenOrder: flattenOrder,
     round2: round2,
   };
 

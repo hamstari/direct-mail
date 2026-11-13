@@ -305,9 +305,11 @@
 
     if (!endpoint) { setTimeout(done, 400); return; }
     var body = new FormData();
+    var flat = C.flattenOrder(order);
+    Object.keys(flat).forEach(function (k) { body.append(k, flat[k] == null ? '' : flat[k]); });
     body.append('order', JSON.stringify(order));
     files.forEach(function (f) { body.append('files', f, f.name); });
-    fetch(endpoint, { method: 'POST', body: body, headers: { Accept: 'application/json' } })
+    fetch(endpoint, { method: 'POST', body: body })
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); done(); })
       .catch(function () {
         btn.disabled = false; btn.textContent = 'Place order';
@@ -333,6 +335,21 @@
       if (li.dataset.step === step) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
     });
     window.scrollTo(0, 0);
+    tellParent('top');
+  }
+
+  /* ---------- when embedded in your website (iframe), tell the page our height ---------- */
+  var embedded = window.parent !== window;
+  function tellParent(scroll) {
+    if (!embedded) return;
+    try {
+      window.parent.postMessage({ bestDealsDirect: true, height: document.documentElement.scrollHeight, scroll: scroll || null }, '*');
+    } catch (e) { /* ignore */ }
+  }
+  if (embedded) {
+    document.documentElement.classList.add('embedded');
+    if (window.ResizeObserver) new ResizeObserver(function () { tellParent(); }).observe(document.body);
+    window.addEventListener('load', function () { tellParent(); });
   }
 
   /* ---------- remember the quote on this device ---------- */

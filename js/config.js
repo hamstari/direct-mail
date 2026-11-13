@@ -94,8 +94,10 @@
     checkout: {
       /*
        * Where finished orders go. Leave empty to run in demo mode (the order is shown, not sent).
-       * Any endpoint that accepts a multipart POST works: your own server, Formspree, Zapier, Make, etc.
-       * Fields sent: order (JSON string) plus any attached files.
+       * Paste your Zapier "Catch Hook" URL (https://hooks.zapier.com/hooks/catch/...)
+       * or Make "Custom webhook" URL (https://hook.us1.make.com/...) between the quotes.
+       * Each order arrives as one-level fields (order_number, customer_email, zip_codes, total...)
+       * plus the full order as JSON in "order" and any attached files as "files".
        */
       orderEndpoint: '',
     },
