@@ -120,7 +120,11 @@
   function parseCSV(text) {
     text = String(text || '').replace(/^﻿/, '');
     // Each line uses tabs if it has any (pasted from a spreadsheet), otherwise commas.
-    var sepAt = function (i) { var end = text.indexOf('\n', i); return text.slice(i, end < 0 ? text.length : end).indexOf('\t') >= 0 ? '\t' : ','; };
+    // Excel in some countries saves with semicolons instead of commas.
+    var sepAt = function (i) {
+      var end = text.indexOf('\n', i), line = text.slice(i, end < 0 ? text.length : end);
+      return line.indexOf('\t') >= 0 ? '\t' : (line.indexOf(';') >= 0 && line.indexOf(',') < 0 ? ';' : ',');
+    };
     var sep = sepAt(0);
     var rows = [], row = [], cell = '', q = false;
     for (var i = 0; i < text.length; i++) {
@@ -148,7 +152,10 @@
   function zipsFromRows(rows, problems) {
     var map = {};
     rows.forEach(function (parts, i) {
-      var zip = String(parts[0] || '').replace(/[^0-9]/g, '');
+      var zip = String(parts[0] || '').trim();
+      // Excel drops leading zeros (01902 becomes 1902), so put them back.
+      if (/^\d{3,4}$/.test(zip)) zip = ('00000' + zip).slice(-5);
+      zip = zip.replace(/-\d{4}$/, '');
       if (!/^\d{5}$/.test(zip)) {
         if (i > 0 && problems) problems.push('ZIPs row ' + (i + 1) + ': "' + parts[0] + '" is not a 5-digit ZIP, skipped.');
         return;

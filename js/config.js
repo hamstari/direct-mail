@@ -1,6 +1,6 @@
 /*
  * Site settings: your business details, the Google Sheet link, and where orders go.
- * Prices, ZIP codes, fees and promo codes live in the Google Sheet (or js/data.js until one is linked).
+ * Prices, ZIP codes, fees and promo codes live in the CSV files in the data folder (or a Google Sheet).
  * Works as a browser global (window.MailConfig) and as a CommonJS module (for tests).
  */
 (function (root) {
@@ -16,10 +16,18 @@
     },
 
     /*
-     * Your price sheet in Google Sheets. Paste the sheet's link between the quotes, for example
+     * Folder with your price files: prices.csv, zips.csv, settings.csv and promos.csv.
+     * Edit them in Excel or Google Sheets, save as CSV, and upload them over the old ones.
+     * Leave empty to use the built-in prices in js/data.js.
+     */
+    priceFiles: 'data/',
+
+    /*
+     * Optional: keep the same four tables in one Google Sheet instead of CSV files.
+     * When this is filled in, it is used instead of the CSV files above. Paste the sheet's link between the quotes, for example
      * 'https://docs.google.com/spreadsheets/d/1AbC.../edit'.
      * The sheet must be shared as "Anyone with the link: Viewer" and have tabs named
-     * Prices, ZIPs, Settings and Promos. Leave empty to use the built-in prices in js/data.js.
+     * Prices, ZIPs, Settings and Promos. Leave empty to use the CSV files.
      */
     googleSheet: '',
 

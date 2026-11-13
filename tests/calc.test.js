@@ -88,7 +88,7 @@ test('built-in sheet loads with no problems', () => {
 test('Google Sheets CSV export (all cells quoted, formatted numbers) reads the same', () => {
   const gviz = {
     prices: '"Option","Size","Paper","2,500","10,000"\n"Full Page","8 x 10","70# gloss, 2-sided","$0.229","$0.187"\n"Bad Row","5 x 7","","0.2",""',
-    zips: '"ZIP","City","County","Homes"\n"33004","Dania Beach","Broward","6,200"\n"3300","Typo","Broward","10"',
+    zips: '"ZIP","City","County","Homes"\n"33004","Dania Beach","Broward","6,200"\n"33O0X","Typo","Broward","10"',
     settings: '"Setting","Value"\n"Setup & prepress fee","$59"\n"Sales tax %","6.5"\n"Rush production %","20"\n"Minimum homes","5,000"\n"4 mailings discount %","8"',
     promos: '"Code","Discount","Description"\n"spring 25","$25","Spring deal"\n"HALF","50%",""',
   };
@@ -103,7 +103,7 @@ test('Google Sheets CSV export (all cells quoted, formatted numbers) reads the s
   assert.equal(c.promoCodes.HALF.pct, 50);
   assert.deepEqual(c.zips.map((z) => z.homes), [6200]);
   assert.ok(c.problems.some((p) => /Bad Row/.test(p)));
-  assert.ok(c.problems.some((p) => /"3300"/.test(p)));
+  assert.ok(c.problems.some((p) => /"33O0X"/.test(p)));
 });
 
 test('a missing tab falls back to the built-in one and says so', () => {
@@ -134,4 +134,18 @@ test('webhook fields are flat and complete', () => {
   assert.equal(f.setup_fee, '49.00');
   assert.equal(f.rush, 'Yes');
   assert.ok(Object.values(f).every((v) => v === undefined || typeof v === 'string'));
+});
+
+test('Excel CSV quirks: lost leading zeros, ZIP+4, semicolons, BOM, quoted inches', () => {
+  const z = C.parseZips('\uFEFFZIP;City;County;Homes\n1902;Lynn;Essex;5000\n33004-1234;Dania Beach;Broward;6200');
+  assert.deepEqual(z.map((x) => x.zip).sort(), ['01902', '33004']);
+  const rows = C.parseCSV('Option,Size,Paper,2500\nFull Page,"8.375"" x 10.875""",70# gloss,0.229');
+  assert.equal(rows[1][1], '8.375" x 10.875"');
+});
+
+test('the CSV files in data/ match the built-in backup', () => {
+  const fs = require('fs');
+  for (const k of ['prices', 'zips', 'settings', 'promos']) {
+    assert.deepEqual(C.parseCSV(fs.readFileSync(__dirname + '/../data/' + k + '.csv', 'utf8')), C.parseCSV(D[k]), k + '.csv differs from js/data.js: run npm run sync-backup');
+  }
 });

@@ -1,9 +1,7 @@
 /*
- * Built-in price sheet, used when no Google Sheet is linked in js/config.js
- * (or if the Google Sheet can't be reached).
- *
- * Each block below is one tab of the spreadsheet, as comma-separated rows.
- * It is easier to keep these in Google Sheets instead: see "Update prices and ZIP codes" in README.md.
+ * Backup copy of the price data. The page uses the CSV files in the data folder (or a Google Sheet);
+ * this copy is only used if those can't be read, so the page never goes blank.
+ * Each block is the same as one CSV file. Update with: npm run sync-backup
  *
  * SAMPLE DATA: only the Full Page Pop Out Insert at 10,000 homes is a real price.
  */

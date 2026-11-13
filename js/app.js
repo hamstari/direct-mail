@@ -10,43 +10,77 @@
   var HEADS = { prices: /option/i, zips: /zip/i, settings: /setting/i, promos: /code/i };
   var HEAD_NAMES = { prices: 'Option', zips: 'ZIP', settings: 'Setting', promos: 'Code' };
 
-  /** Fetch the four tabs of the linked Google Sheet as CSV. Resolves { tabs, source, problems }. */
-  function loadSheet(link) {
-    var m = String(link || '').match(/\/d\/([a-zA-Z0-9_-]{20,})/) || String(link || '').match(/^([a-zA-Z0-9_-]{20,})$/);
-    if (!link) return Promise.resolve({ tabs: BUILT_IN, source: 'built-in prices (js/data.js)', problems: [] });
-    if (!m) return Promise.resolve({ tabs: BUILT_IN, source: 'built-in prices (js/data.js)', problems: ['The googleSheet link in js/config.js is not a Google Sheets link.'] });
-    var base = 'https://docs.google.com/spreadsheets/d/' + m[1] + '/gviz/tq?tqx=out:csv&headers=1&sheet=';
-    var problems = [];
+  /**
+   * Where the price data comes from, in order: the Google Sheet (if linked), else the CSV files
+   * in the data folder, else the built-in copy in js/data.js.
+   */
+  function sources() {
+    var link = String(site.googleSheet || '').trim();
+    if (link) {
+      var m = link.match(/\/d\/([a-zA-Z0-9_-]{20,})/) || link.match(/^([a-zA-Z0-9_-]{20,})$/);
+      if (!m) return { error: 'The googleSheet link in js/config.js is not a Google Sheets link.' };
+      var base = 'https://docs.google.com/spreadsheets/d/' + m[1] + '/gviz/tq?tqx=out:csv&headers=1&sheet=';
+      return {
+        name: 'Google Sheet',
+        url: function (key) { return base + encodeURIComponent(TABS[key]) + '&t=' + Date.now(); },
+        label: function (key) { return 'the "' + TABS[key] + '" tab'; },
+        unreadable: 'Is the sheet shared as "Anyone with the link: Viewer"?',
+      };
+    }
+    var folder = String(site.priceFiles || '').trim();
+    if (folder) {
+      if (!/\/$/.test(folder)) folder += '/';
+      return {
+        name: 'CSV files (' + folder + ')',
+        url: function (key) { return folder + key + '.csv?t=' + Date.now(); },
+        label: function (key) { return folder + key + '.csv'; },
+        unreadable: 'Check that the file is uploaded next to index.html.',
+      };
+    }
+    return null;
+  }
+
+  /** Load the four tables. Resolves { tabs, source, problems }. */
+  function loadTabs() {
+    var src = sources();
+    if (!src) return Promise.resolve({ tabs: BUILT_IN, source: 'built-in prices (js/data.js)', problems: [] });
+    if (src.error) return Promise.resolve({ tabs: BUILT_IN, source: 'built-in prices (js/data.js)', problems: [src.error] });
+    var problems = [], failed = 0;
     var timeout = new Promise(function (resolve) { setTimeout(function () { resolve('timeout'); }, 8000); });
     var jobs = Object.keys(TABS).map(function (key) {
-      return fetch(base + encodeURIComponent(TABS[key]) + '&t=' + Date.now(), { cache: 'no-store' })
+      return fetch(src.url(key), { cache: 'no-store' })
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
         .then(function (text) {
           var first = C.parseCSV(text)[0] || [];
           if (/^\s*</.test(text) || !HEADS[key].test(first[0] || '')) {
-            problems.push('Could not find a tab named "' + TABS[key] + '" whose first column is headed "' + HEAD_NAMES[key] + '". Check the tab name and row 1.');
+            problems.push('Could not use ' + src.label(key) + ': its first column should be headed "' + HEAD_NAMES[key] + '". Check the name and row 1.');
             return [key, null];
           }
           return [key, text];
         })
         .catch(function () {
-          problems.push('Could not read the "' + TABS[key] + '" tab. Is the sheet shared as "Anyone with the link: Viewer"?');
+          failed++;
+          problems.push('Could not read ' + src.label(key) + '. ' + src.unreadable);
           return [key, null];
         });
     });
     return Promise.race([Promise.all(jobs), timeout]).then(function (res) {
-      if (res === 'timeout') return { tabs: BUILT_IN, source: 'built-in prices (Google Sheet took too long)', problems: ['The Google Sheet did not answer within 8 seconds.'] };
+      if (res === 'timeout') return { tabs: BUILT_IN, source: 'built-in prices (' + src.name + ' took too long)', problems: [src.name + ' did not answer within 8 seconds.'] };
+      if (failed === res.length) {
+        // Nothing could be read at all (for example the page was opened straight from a computer's disk).
+        return { tabs: BUILT_IN, source: 'built-in prices (could not read ' + src.name + ')', problems: problems };
+      }
       var tabs = {};
       res.forEach(function (kv) { if (kv[1] != null) tabs[kv[0]] = kv[1]; });
-      if (tabs.promos == null) tabs.promos = ''; // never turn on the sample promo codes for a live sheet
-      return { tabs: tabs, source: 'Google Sheet', problems: problems };
+      if (tabs.promos == null) tabs.promos = ''; // never turn on the sample promo codes for live data
+      return { tabs: tabs, source: src.name, problems: problems };
     });
   }
 
-  loadSheet(site.googleSheet).then(function (res) {
+  loadTabs().then(function (res) {
     var cfg = C.buildData(site, res.tabs, BUILT_IN);
     cfg.problems = res.problems.concat(cfg.problems);
-    if (cfg.problems.length && window.console) console.warn('Price sheet:\n' + cfg.problems.join('\n'));
+    if (cfg.problems.length && window.console) console.warn('Price data:\n' + cfg.problems.join('\n'));
     start(cfg, res.source);
   });
 
@@ -411,7 +445,7 @@
       if (!on) return;
       var sizes = cfg.products.reduce(function (n, p) { return n + p.sizes.length; }, 0);
       var homes = ZIPS.reduce(function (n, z) { return n + z.homes; }, 0);
-      box.innerHTML = '<h2>Price sheet check</h2>' +
+      box.innerHTML = '<h2>Price data check</h2>' +
         '<p>Loaded from: <b>' + esc(source) + '</b></p>' +
         '<ul class="check-list">' +
         '<li>' + cfg.products.length + ' options, ' + sizes + ' sizes, price breaks at ' + cfg.breaks.map(int).join(', ') + ' homes</li>' +
@@ -422,7 +456,7 @@
         (cfg.problems.length
           ? '<p><b>' + cfg.problems.length + ' thing' + (cfg.problems.length > 1 ? 's' : '') + ' to fix:</b></p><ul class="problems">' + cfg.problems.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>'
           : '<p class="all-good">✓ No problems found.</p>') +
-        '<p class="muted small">Only you see this panel, because the link ends in #check. Google can take up to 5 minutes to show sheet edits.</p>';
+        '<p class="muted small">Customers don't see this panel: it only shows when the address ends in #check. After uploading new CSV files, reload this page. Google Sheets edits can take up to 5 minutes to show.</p>';
     }
     window.addEventListener('hashchange', renderCheck);
 
@@ -437,6 +471,7 @@
       } catch (e) { /* ignore */ }
       // Keep only ZIPs that are still in the distribution list.
       state.zips = (Array.isArray(state.zips) ? state.zips : []).filter(function (z, i, a) { return zipByCode[z] && a.indexOf(z) === i; });
+      if (!state.zips.length) state.zips = starterZips();
       $('in-home').value = state.inHome || '';
       $('promo').value = state.promo || '';
     }

@@ -15,25 +15,26 @@ A web page where home-improvement businesses build an insert or direct mailer, s
 
 **2 · Checkout** collects business, billing and payment preference (card link or invoice, sent after the proof is approved). **3 · Confirmation** shows the order number and a printable receipt.
 
-## Update prices and ZIP codes (Google Sheets)
+## Update prices and ZIP codes (CSV files)
 
-Everything that changes (prices, sizes, ZIP codes, fees, tax, mailing discounts, promo codes) lives in one Google Sheet. The calculator reads it each time a customer opens the page, so an edit shows on your website within about 5 minutes, with no files to upload.
+Everything that changes lives in four CSV files in the `data` folder:
 
-**One-time setup (about 5 minutes)**
-1. Upload `price-sheet-template.xlsx` to Google Drive, then open it with Google Sheets and use **File → Save as Google Sheets**.
-2. Click **Share** and set General access to **Anyone with the link: Viewer**. (Customers can see the prices on your site anyway. Only people you add as Editors can change them.)
-3. Copy the sheet's address from your browser and paste it into `googleSheet` in `js/config.js`.
-4. Open your calculator with `#check` at the end of the address (for example `yoursite.com/direct-mail/#check`). A panel shows what loaded and anything to fix.
+| File | Columns |
+|---|---|
+| `data/prices.csv` | Option, Size, Paper, then one column per price break (header = number of homes, cells = price per home) |
+| `data/zips.csv` | ZIP, City, County, Homes |
+| `data/settings.csv` | Setting, Value (setup fee, sales tax %, rush %, minimum homes, one row per mailing choice like "3 mailings discount %") |
+| `data/promos.csv` | Code, Discount (`10%` off the ad or `$49` off the order), Description |
 
-**Day to day**: edit the sheet. The "Start here" tab explains each tab:
-- **Prices**: one row per option and size. The columns after Paper are price breaks: the header is a number of homes and each cell is the price per home. Add a row for a new size or option, add a column for a new price break, or delete a row to stop selling something. Keep prices as plain numbers with 3 decimals (0.187).
-- **ZIPs**: ZIP, City, County, Homes. Customers can only pick ZIPs listed here.
-- **Settings**: setup fee, sales tax %, rush %, minimum homes, and one row per mailing choice ("3 mailings discount %").
-- **Promos**: Code, Discount (`10%` off the ad or `$49` off the order), Description.
+**To update:** open the file in Excel, Numbers or Google Sheets, change it, save it as **CSV**, and upload it to your website's `data` folder over the old one. The next visitor gets the new prices; no other files change.
 
-If the sheet can't be reached or a tab is missing, the page uses the built-in prices in `js/data.js` so it never goes blank (and turns off promo codes), and `#check` tells you what went wrong. A brand-new option name shows with a plain drawing until it gets a description in `options` in `js/config.js`.
+- Add a row for a new size or option, add a column for a new price break, or delete a row to stop selling something. Keep row 1 (the headers).
+- Excel quirks are handled: dropped leading zeros on ZIPs (1902 becomes 01902), ZIP+4, numbers like 6,200, and semicolon-separated files.
+- **Check your upload:** open your calculator with `#check` at the end of the address (for example `yoursite.com/direct-mail/#check`). A panel shows what loaded and anything to fix, such as a bad ZIP, a missing price, or a price that goes up at a bigger quantity. Customers don't see it.
+- If a file can't be read, the page uses the backup copy in `js/data.js` so it never goes blank (and turns off promo codes). To refresh that backup after changing the CSVs: `npm run sync-backup`.
+- A brand-new option name shows with a plain drawing until it gets a description in `options` in `js/config.js`.
 
-To rebuild the template from `js/data.js`: `python3 tools/build-sheet-template.py`.
+**Prefer Google Sheets?** Upload `price-sheet-template.xlsx` to Google Drive, open it with Google Sheets, share it as "Anyone with the link: Viewer", and paste its link into `googleSheet` in `js/config.js`. The page then reads the sheet instead of the CSV files, and edits show within about 5 minutes with nothing to upload.
 
 ## Receive orders (Zapier or Make)
 
@@ -57,14 +58,14 @@ Prices are calculated in the customer's browser, so check the total on each orde
 
 ## Put it on your website
 
-1. Upload the whole folder (`index.html`, `css/`, `js/`) to your web host, for example as `yoursite.com/direct-mail/`. Then you can link straight to `yoursite.com/direct-mail/index.html`.
+1. Upload the whole folder (`index.html`, `css/`, `js/`, `data/`) to your web host, for example as `yoursite.com/direct-mail/`. Then you can link straight to `yoursite.com/direct-mail/index.html`.
 2. Or embed it inside an existing page: open `embed-snippet.html`, change the `src` to where you uploaded the folder, and paste the code into a WordPress "Custom HTML" block, a Wix "Embed code" element, or a Squarespace "Code" block. The frame grows to fit the calculator, so there is no inner scroll bar.
 
 If your website builder can't host files (Wix, Squarespace), host the folder for free on GitHub Pages or Netlify and use that address in the embed code.
 
 ## Run it
 
-No build step. Open `index.html`, or:
+No build step. Opened straight from your computer, `index.html` uses the backup prices in `js/data.js` (browsers block reading the CSV files from disk). To test your CSV files, serve the folder:
 
 ```sh
 npm start   # serves on http://localhost:3000
@@ -76,9 +77,11 @@ npm test    # pricing tests (Node 18+)
 - `index.html`: page layout (build, checkout, confirmation)
 - `css/styles.css`: styles (light/dark, mobile, print)
 - `js/config.js`: business details, Google Sheet link, order webhook, option descriptions
-- `js/data.js`: built-in prices and ZIPs (used until a Google Sheet is linked)
+- `data/*.csv`: your prices, ZIP codes, settings and promo codes
+- `js/data.js`: backup copy of the CSV data (`npm run sync-backup`)
 - `price-sheet-template.xlsx`: starting point for your Google Sheet
-- `tools/build-sheet-template.py`: rebuilds the template from `js/data.js`
+- `tools/build-sheet-template.py`: rebuilds the Google Sheets template from `js/data.js`
+- `tools/sync-backup.js`: copies `data/*.csv` into `js/data.js`
 - `js/calc.js`: pricing math (shared by the page and the tests)
 - `js/app.js`: page behavior
 - `embed-snippet.html`: code to paste into your website

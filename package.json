@@ -5,6 +5,7 @@
   "description": "Direct mail print order calculator with ad sizes and online checkout.",
   "scripts": {
     "test": "node --test tests/calc.test.js",
-    "start": "npx --yes serve ."
+    "start": "npx --yes serve .",
+    "sync-backup": "node tools/sync-backup.js"
   }
 }
