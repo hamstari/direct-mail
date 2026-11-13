@@ -456,7 +456,7 @@
         (cfg.problems.length
           ? '<p><b>' + cfg.problems.length + ' thing' + (cfg.problems.length > 1 ? 's' : '') + ' to fix:</b></p><ul class="problems">' + cfg.problems.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>'
           : '<p class="all-good">✓ No problems found.</p>') +
-        '<p class="muted small">Customers don't see this panel: it only shows when the address ends in #check. After uploading new CSV files, reload this page. Google Sheets edits can take up to 5 minutes to show.</p>';
+        '<p class="muted small">Customers do not see this panel: it only shows when the address ends in #check. After uploading new CSV files, reload this page. Google Sheets edits can take up to 5 minutes to show.</p>';
     }
     window.addEventListener('hashchange', renderCheck);
 

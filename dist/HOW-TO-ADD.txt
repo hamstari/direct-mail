@@ -1,0 +1,32 @@
+ADD THE BEST DEALS DIRECT CALCULATOR TO YOUR WEBSITE
+=====================================================
+
+1. Unzip this file. You get a folder called "direct-mail".
+
+2. Upload the whole "direct-mail" folder to your website:
+   - cPanel / GoDaddy / Bluehost / Hostinger: File Manager > public_html > Upload, then Extract.
+   - FTP: copy the folder into public_html (or www).
+   - WordPress: same as above (File Manager or FTP into the folder that holds wp-content).
+   The calculator is then live at:  https://YOUR-SITE.com/direct-mail/
+
+3. Show it on a page (optional). Open embed-snippet.html, change YOUR-SITE.com
+   to your address, and paste the code into:
+   - WordPress: a "Custom HTML" block
+   - Wix: Add > Embed Code > Embed HTML
+   - Squarespace: a "Code" block
+   Or just add a button/menu link to https://YOUR-SITE.com/direct-mail/
+
+   Wix and Squarespace can't host the folder itself. Host it somewhere free
+   (GitHub Pages or Netlify), then use that address in the embed code.
+
+4. Check it: open https://YOUR-SITE.com/direct-mail/#check
+   It should say "Loaded from: CSV files (data/)".
+
+CHANGING PRICES LATER
+Edit the files in direct-mail/data/ in Excel, save as CSV, and upload them
+over the old ones.
+
+RIGHT NOW IT IS A DEMO
+It shows test prices and sample ZIP codes, and orders are not sent anywhere.
+To receive orders, put your Zapier webhook URL in direct-mail/js/config.js
+(orderEndpoint).

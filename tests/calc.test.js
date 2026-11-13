@@ -149,3 +149,8 @@ test('the CSV files in data/ match the built-in backup', () => {
     assert.deepEqual(C.parseCSV(fs.readFileSync(__dirname + '/../data/' + k + '.csv', 'utf8')), C.parseCSV(D[k]), k + '.csv differs from js/data.js: run npm run sync-backup');
   }
 });
+
+test('every page script parses', () => {
+  const { execFileSync } = require('child_process');
+  for (const f of ['config', 'data', 'calc', 'app']) execFileSync(process.execPath, ['--check', __dirname + '/../js/' + f + '.js']);
+});
