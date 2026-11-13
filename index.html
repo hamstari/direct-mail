@@ -3,188 +3,185 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Direct Mail Pricing</title>
-  <meta name="description" content="Price your printed direct mail by ad size, quantity and delivery, then order online.">
+  <title>Best Deals Direct</title>
+  <meta name="description" content="Price and order an insert or direct mailer. Postage and ad design included.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display&display=swap">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header class="top">
-    <div class="wrap top-row">
-      <a href="#quote" class="brand" id="brand">Direct Mail</a>
-      <a href="#cart" class="cart-btn" id="cart-btn" aria-label="Your order">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM5.2 4l.6 3H21l-2 8H7.4L4.3 2H1v2h2.6z"/></svg>
-        Your order <span class="badge" id="cart-count">0</span>
-      </a>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow" id="network">Best Deals Networks</p>
+      <h1 id="brand">Best Deals Direct</h1>
+      <p class="tagline" id="tagline"></p>
+      <ol class="steps-nav" aria-label="Order steps">
+        <li data-step="build" aria-current="step">1 · Build your mailer</li>
+        <li data-step="checkout">2 · Checkout</li>
+        <li data-step="done">3 · Confirmation</li>
+      </ol>
     </div>
   </header>
 
-  <!-- ===================== QUOTE ===================== -->
-  <main id="view-quote" class="wrap view">
-    <div class="intro">
-      <h1>Price your direct mail</h1>
-      <p class="lede">Pick an ad size, how many homes to reach, and how it gets there. Your price updates as you go.</p>
-    </div>
-
+  <!-- ===================== 1. BUILD ===================== -->
+  <main id="view-build" class="wrap view">
     <div class="layout">
-      <div class="steps">
-        <section class="card" aria-labelledby="s1">
-          <h2 id="s1"><span class="num">1</span> Ad size</h2>
-          <div class="seg" role="radiogroup" aria-label="Type of mailer">
-            <label><input type="radio" name="kind" value="solo" checked> My own mailer <small>Postcards &amp; flyers</small></label>
-            <label><input type="radio" name="kind" value="shared"> Ad in a shared mailer <small>Lower cost, shared with other businesses</small></label>
-          </div>
-          <div id="sizes" class="sizes" role="radiogroup" aria-label="Ad size"></div>
-          <p id="size-note" class="muted small-text"></p>
+      <div class="col-main">
+        <section class="card" aria-labelledby="h-product">
+          <h2 id="h-product"><span class="num">1</span> Direct mail option</h2>
+          <div id="products" class="options" role="radiogroup" aria-labelledby="h-product"></div>
+          <p class="info" id="postage-note"></p>
         </section>
 
-        <section class="card" aria-labelledby="s2">
-          <h2 id="s2"><span class="num">2</span> Who gets it</h2>
-          <div id="delivery-wrap">
-            <div id="delivery" class="radios" role="radiogroup" aria-label="Delivery method"></div>
-          </div>
-          <div class="grid2">
-            <label><span id="qty-label">How many pieces</span>
-              <input id="qty" type="number" inputmode="numeric" min="0" step="50" value="5000">
-            </label>
-            <label>Area or routes <small class="muted">(optional)</small>
-              <input id="area" type="text" placeholder="ZIP codes, city or carrier routes" autocomplete="off">
-            </label>
-          </div>
-          <div class="chips" id="qty-chips" aria-label="Common quantities"></div>
+        <section class="card" aria-labelledby="h-size">
+          <h2 id="h-size"><span class="num">2</span> Ad size</h2>
+          <p class="muted" id="size-hint"></p>
+          <div id="sizes" class="sizes" role="radiogroup" aria-labelledby="h-size"></div>
+          <div class="spec" id="spec"></div>
         </section>
 
-        <section class="card" aria-labelledby="s3" id="paper-card">
-          <h2 id="s3"><span class="num">3</span> Paper &amp; printing</h2>
-          <div class="grid3">
-            <label>Paper <select id="stock"></select></label>
-            <label>Finish <select id="finish"></select></label>
-            <label>Sides <select id="sides"></select></label>
+        <section class="card" aria-labelledby="h-homes">
+          <h2 id="h-homes"><span class="num">3</span> How many homes?</h2>
+          <div class="homes-row">
+            <input type="range" id="homes-range" aria-label="Homes" step="500">
+            <input type="text" inputmode="numeric" id="homes" aria-label="Number of homes" autocomplete="off">
           </div>
+          <div class="chips" id="quick-picks" aria-label="Quick picks"></div>
+          <p class="muted small" id="homes-hint"></p>
         </section>
 
-        <section class="card" aria-labelledby="s4">
-          <h2 id="s4"><span class="num" id="s4n">4</span> Design &amp; schedule</h2>
-          <fieldset class="plain">
-            <legend>Artwork</legend>
-            <div id="design" class="radios"></div>
-          </fieldset>
-          <div class="grid2">
-            <label>Turnaround <select id="turnaround"></select></label>
-            <label>Times to mail this ad <select id="drops"></select></label>
+        <section class="card" aria-labelledby="h-extras">
+          <h2 id="h-extras"><span class="num">4</span> Schedule &amp; extras</h2>
+
+          <p class="label" id="l-mailings">Number of mailings</p>
+          <div class="chips" id="mailings" role="radiogroup" aria-labelledby="l-mailings"></div>
+
+          <p class="label">Artwork</p>
+          <div class="info design"><span aria-hidden="true">🎨</span>
+            <p><strong>Design is on us.</strong> Our in-house design team will contact you to create your ad. No artwork needed to order.</p>
           </div>
-          <p class="muted small-text" id="drops-note"></p>
+
+          <div class="toggle-row">
+            <div>
+              <p class="toggle-title" id="l-rush">Rush production</p>
+              <p class="muted small">Moves your job to the front of the print queue</p>
+            </div>
+            <label class="switch"><input type="checkbox" id="rush" role="switch" aria-labelledby="l-rush"><span></span></label>
+          </div>
+
+          <label class="label" for="counties">Counties where you do business <span class="req">*</span></label>
+          <input type="text" id="counties" placeholder="e.g. Broward, Palm Beach" autocomplete="off">
+          <p class="field-error" id="counties-error" hidden>Tell us at least one county so we know where to mail.</p>
+
+          <label class="label" for="in-home">Preferred in-home date <span class="muted">(optional)</span></label>
+          <input type="text" id="in-home" placeholder="e.g. Dec 1" autocomplete="off">
+
+          <label class="drop" for="files">
+            <input type="file" id="files" multiple accept="image/*,.pdf,.ai,.eps,.svg">
+            <span id="files-label"><span aria-hidden="true">📎</span> Have a logo or photos? Attach them for our designers (optional)</span>
+          </label>
         </section>
       </div>
 
-      <aside class="summary card" aria-labelledby="sum-h">
-        <div class="preview" id="preview" aria-hidden="true"></div>
-        <h2 id="sum-h" class="sum-title"></h2>
-        <p class="muted small-text" id="sum-sub"></p>
-        <table class="lines" id="lines"></table>
-        <div class="total-row"><span>Total</span><strong id="total">$0</strong></div>
-        <p class="per" id="per"></p>
-        <ul class="notes" id="notes"></ul>
-        <button class="btn primary block" id="add">Add to order</button>
-        <button class="btn ghost block" id="cancel-edit" hidden>Cancel changes</button>
+      <aside class="col-side">
+        <section class="card order" aria-labelledby="h-order">
+          <h2 id="h-order" class="serif">Your order</h2>
+          <p class="muted small" id="order-name"></p>
+          <ul class="notes" id="order-notes"></ul>
+          <div class="lines" id="order-lines"></div>
+          <div class="total-row"><span>Total</span><strong id="order-total">$0.00</strong></div>
+          <p class="per-home" id="per-home"></p>
+          <form class="promo" id="promo-form">
+            <input type="text" id="promo" placeholder="Promo code" aria-label="Promo code" autocomplete="off">
+            <button type="submit" class="btn ghost">Apply</button>
+          </form>
+          <p class="field-error" id="promo-msg" hidden></p>
+          <button type="button" class="btn primary block lg" id="to-checkout">Continue to checkout →</button>
+          <p class="fine"><span aria-hidden="true">🔒</span> No charge until your proof is approved</p>
+        </section>
       </aside>
     </div>
   </main>
 
-  <!-- ===================== CART ===================== -->
-  <main id="view-cart" class="wrap view narrow" hidden>
-    <h1>Your order</h1>
-    <div id="cart-empty" class="card empty">
-      <p>Nothing here yet.</p>
-      <a class="btn primary" href="#quote">Price a mailer</a>
-    </div>
-    <div id="cart-full">
-      <ul id="cart-items" class="cart-items"></ul>
-      <div class="card totals" id="cart-totals"></div>
-      <div class="actions">
-        <a class="btn ghost" href="#quote" id="add-another">+ Add another ad</a>
-        <a class="btn primary" href="#checkout">Check out</a>
-      </div>
-    </div>
-  </main>
-
-  <!-- ===================== CHECKOUT ===================== -->
+  <!-- ===================== 2. CHECKOUT ===================== -->
   <main id="view-checkout" class="wrap view" hidden>
-    <h1>Check out</h1>
     <div class="layout">
-      <form id="checkout-form" class="steps" novalidate>
+      <form class="col-main" id="checkout-form" novalidate>
         <section class="card">
-          <h2>Contact</h2>
+          <h2><span class="num">1</span> Your business</h2>
           <div class="grid2">
-            <label>Your name <input name="name" required autocomplete="name"></label>
-            <label>Business name <input name="company" autocomplete="organization"></label>
-            <label>Email <input name="email" type="email" required autocomplete="email"></label>
-            <label>Phone <input name="phone" type="tel" required autocomplete="tel"></label>
+            <label class="label">Your name <span class="req">*</span><input type="text" name="name" autocomplete="name" required></label>
+            <label class="label">Business name <span class="req">*</span><input type="text" name="company" autocomplete="organization" required></label>
+            <label class="label">Email <span class="req">*</span><input type="email" name="email" autocomplete="email" required></label>
+            <label class="label">Phone <span class="req">*</span><input type="tel" name="phone" autocomplete="tel" required></label>
           </div>
+          <label class="label">Website <span class="muted">(optional)</span><input type="text" name="website" autocomplete="url" placeholder="yourcompany.com"></label>
+          <label class="label">Services you offer <span class="muted">(optional)</span><input type="text" name="services" placeholder="e.g. roofing, windows, HVAC"></label>
         </section>
 
         <section class="card">
-          <h2>Billing address</h2>
-          <label>Street <input name="street" required autocomplete="street-address"></label>
+          <h2><span class="num">2</span> Billing address</h2>
+          <label class="label">Street address <span class="req">*</span><input type="text" name="address" autocomplete="street-address" required></label>
           <div class="grid3">
-            <label>City <input name="city" required autocomplete="address-level2"></label>
-            <label>State <input name="state" required maxlength="2" autocomplete="address-level1" placeholder="TX"></label>
-            <label>ZIP <input name="zip" required inputmode="numeric" pattern="\d{5}(-\d{4})?" autocomplete="postal-code"></label>
+            <label class="label">City <span class="req">*</span><input type="text" name="city" autocomplete="address-level2" required></label>
+            <label class="label">State <span class="req">*</span><input type="text" name="state" autocomplete="address-level1" required></label>
+            <label class="label">ZIP <span class="req">*</span><input type="text" name="zip" inputmode="numeric" autocomplete="postal-code" required></label>
           </div>
         </section>
 
         <section class="card">
-          <h2>Mailing details</h2>
-          <div class="grid2">
-            <label>Earliest mail date <input name="mailDate" type="date" required id="mail-date"></label>
-            <label>Artwork / mailing list files <input name="files" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.ai,.eps,.psd,.csv,.xlsx,.xls,.zip"></label>
+          <h2><span class="num">3</span> Payment</h2>
+          <div class="radios">
+            <label class="radio"><input type="radio" name="payment" value="card" checked>
+              <span><b>Card</b><small>We send a secure payment link once you approve your proof.</small></span></label>
+            <label class="radio"><input type="radio" name="payment" value="invoice">
+              <span><b>Invoice</b><small>We email an invoice once you approve your proof.</small></span></label>
           </div>
-          <label>Notes for us <textarea name="notes" rows="3" placeholder="Offer, phone number to print, design ideas, target areas..."></textarea></label>
-          <p class="muted small-text">No files yet? That's fine. We'll email you a proof request after you order.</p>
+          <label class="label">Notes for our team <span class="muted">(optional)</span><textarea name="notes" rows="3" placeholder="Offers, colors, anything you want in your ad"></textarea></label>
+          <label class="check"><input type="checkbox" name="agree" required> <span>I understand my ad will be designed by Best Deals and nothing is charged until I approve the proof.</span></label>
+          <p class="form-error" id="checkout-error" hidden></p>
         </section>
-
-        <section class="card">
-          <h2>Payment</h2>
-          <div class="radios" id="pay">
-            <label class="radio"><input type="radio" name="payment" value="card" checked> <span><b>Pay by card</b><small>You'll go to our secure payment page after placing the order.</small></span></label>
-            <label class="radio"><input type="radio" name="payment" value="invoice"> <span><b>Send me an invoice</b><small>Pay by card, ACH or check before your order goes to print.</small></span></label>
-          </div>
-          <label class="check"><input type="checkbox" name="agree" required> I'll approve a proof before anything prints, and I understand postage and list counts are estimates until routes are confirmed.</label>
-        </section>
-
-        <p class="form-error" id="form-error" role="alert" hidden></p>
-        <button class="btn primary block lg" type="submit" id="place">Place order</button>
       </form>
 
-      <aside class="summary card" aria-labelledby="co-h">
-        <h2 id="co-h" class="sum-title">Order summary</h2>
-        <ul class="co-items" id="co-items"></ul>
-        <div id="co-totals"></div>
-        <a href="#cart" class="small-text">Edit order</a>
+      <aside class="col-side">
+        <section class="card order">
+          <h2 class="serif">Your order</h2>
+          <p class="muted small" id="co-name"></p>
+          <dl class="facts" id="co-facts"></dl>
+          <div class="lines" id="co-lines"></div>
+          <div class="total-row"><span>Total</span><strong id="co-total">$0.00</strong></div>
+          <button type="submit" form="checkout-form" class="btn primary block lg" id="place-order">Place order</button>
+          <button type="button" class="btn ghost block" id="back-build">← Edit mailer</button>
+          <p class="fine"><span aria-hidden="true">🔒</span> No charge until your proof is approved</p>
+        </section>
       </aside>
     </div>
   </main>
 
-  <!-- ===================== CONFIRMATION ===================== -->
+  <!-- ===================== 3. CONFIRMATION ===================== -->
   <main id="view-done" class="wrap view narrow" hidden>
-    <div class="card done">
+    <section class="card done">
       <div class="tick" aria-hidden="true">✓</div>
-      <h1>Order received</h1>
-      <p class="lede">Order <strong id="done-num"></strong></p>
-      <p id="done-msg"></p>
-      <div id="done-demo" class="demo-note" hidden>
-        <strong>Demo mode:</strong> this order was not sent anywhere. Set <code>checkout.orderEndpoint</code> in <code>js/config.js</code> to receive orders.
-      </div>
+      <h2 class="serif big">Thanks, your order is in</h2>
+      <p class="muted">Order <strong id="done-number"></strong>. Our design team will reach out to <span id="done-email"></span> within one business day to start your ad.</p>
       <div id="done-summary"></div>
+      <ol class="next">
+        <li><b>Design.</b> We build your ad from your info and files.</li>
+        <li><b>Proof.</b> You review it and ask for changes.</li>
+        <li><b>Approve &amp; pay.</b> Nothing is charged until you approve.</li>
+        <li><b>Mail.</b> Your ad goes out to <span id="done-homes"></span> homes.</li>
+      </ol>
+      <p class="demo-note" id="demo-note" hidden>Demo mode: this order was not sent anywhere. Set <code>checkout.orderEndpoint</code> in <code>js/config.js</code> to receive orders.</p>
       <div class="actions">
-        <button class="btn ghost" onclick="window.print()">Print receipt</button>
-        <a class="btn primary" id="pay-link" hidden>Pay now</a>
-        <a class="btn ghost" href="#quote" id="new-order">Start a new order</a>
+        <button type="button" class="btn ghost" onclick="window.print()">Print receipt</button>
+        <button type="button" class="btn primary" id="new-order">Start a new order</button>
       </div>
-    </div>
+    </section>
   </main>
 
-  <footer class="wrap foot muted small-text">
-    <p id="foot"></p>
+  <footer class="wrap foot muted small">
+    Questions? <a id="foot-email" href="#"></a> · <a id="foot-phone" href="#"></a>
   </footer>
 
   <script src="js/config.js"></script>
