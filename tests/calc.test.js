@@ -1,10 +1,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const cfg = require('../js/config.js');
+const site = require('../js/config.js');
+const D = require('../js/data.js');
 const C = require('../js/calc.js');
+const cfg = C.buildData(site, D, D);
 
 const close = (a, b, eps = 0.006) => assert.ok(Math.abs(a - b) < eps, `${a} != ${b}`);
-const base = { productId: 'fullpage', sizeId: 'fp-8375x10875', homes: 10000, mailings: 1, rush: false, promo: '' };
+const fullPage = cfg.products.find((p) => p.name === 'Full Page Pop Out Insert');
+const base = { productId: fullPage.id, sizeId: fullPage.sizes[0].id, homes: 10000, mailings: 1, rush: false, promo: '' };
 const amt = (r, kind, re) => r.lines.find((l) => l.kind === kind && (!re || re.test(l.label)));
 
 test('matches the live quote: full page, 10,000 homes', () => {
@@ -73,10 +76,45 @@ test('distribution ZIP list parses commas, tabs, header and duplicates', () => {
   assert.equal(C.homesForZips(list, ['33004', '33401', '99999']), 13900);
 });
 
-test('sample distribution list loads', () => {
-  const list = C.parseZips(require('../js/zips.js'));
-  assert.ok(list.length > 5);
-  assert.ok(list.every((z) => z.homes > 0 && z.county));
+test('built-in sheet loads with no problems', () => {
+  assert.deepEqual(cfg.problems, []);
+  assert.deepEqual(cfg.breaks, [2500, 5000, 10000, 25000, 50000, 100000]);
+  assert.equal(cfg.products.length, 4);
+  assert.equal(cfg.defaultProductId, fullPage.id);
+  assert.equal(fullPage.sizes[0].dims, '8.375" × 10.875"');
+  assert.ok(cfg.zips.length > 5 && cfg.zips.every((z) => z.homes > 0 && z.county));
+});
+
+test('Google Sheets CSV export (all cells quoted, formatted numbers) reads the same', () => {
+  const gviz = {
+    prices: '"Option","Size","Paper","2,500","10,000"\n"Full Page","8 x 10","70# gloss, 2-sided","$0.229","$0.187"\n"Bad Row","5 x 7","","0.2",""',
+    zips: '"ZIP","City","County","Homes"\n"33004","Dania Beach","Broward","6,200"\n"3300","Typo","Broward","10"',
+    settings: '"Setting","Value"\n"Setup & prepress fee","$59"\n"Sales tax %","6.5"\n"Rush production %","20"\n"Minimum homes","5,000"\n"4 mailings discount %","8"',
+    promos: '"Code","Discount","Description"\n"spring 25","$25","Spring deal"\n"HALF","50%",""',
+  };
+  const c = C.buildData(site, gviz, D);
+  assert.deepEqual(c.breaks, [2500, 10000]);
+  assert.equal(c.products.length, 1);
+  assert.equal(c.products[0].sizes[0].spec, '70# gloss, 2-sided');
+  assert.deepEqual(c.products[0].sizes[0].rates, [0.229, 0.187]);
+  assert.equal(c.setupFee, 59); assert.equal(c.taxPct, 6.5); assert.equal(c.rushPct, 20); assert.equal(c.minHomes, 5000);
+  assert.deepEqual(c.mailings, [{ count: 1, pct: 0 }, { count: 4, pct: 8 }]);
+  assert.deepEqual(c.promoCodes.SPRING25, { amount: 25, label: 'Spring deal' });
+  assert.equal(c.promoCodes.HALF.pct, 50);
+  assert.deepEqual(c.zips.map((z) => z.homes), [6200]);
+  assert.ok(c.problems.some((p) => /Bad Row/.test(p)));
+  assert.ok(c.problems.some((p) => /"3300"/.test(p)));
+});
+
+test('a missing tab falls back to the built-in one and says so', () => {
+  const c = C.buildData(site, { prices: D.prices, settings: D.settings, promos: D.promos }, D);
+  assert.equal(c.zips.length, cfg.zips.length);
+  assert.ok(c.problems.some((p) => /Zips tab not loaded; using the built-in zips/.test(p)));
+});
+
+test('price that goes up at a bigger quantity is flagged', () => {
+  const c = C.buildData(site, { ...D, prices: 'Option,Size,Paper,2500,5000\nX,4 x 6,,0.20,0.25' }, D);
+  assert.ok(c.problems.some((p) => /goes up at 5,000/.test(p)));
 });
 
 test('webhook fields are flat and complete', () => {

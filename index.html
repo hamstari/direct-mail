@@ -26,11 +26,12 @@
 
   <!-- ===================== 1. BUILD ===================== -->
   <main id="view-build" class="wrap view">
+    <section class="card data-check" id="data-check" hidden></section>
     <div class="layout">
       <div class="col-main">
         <section class="card" aria-labelledby="h-product">
           <h2 id="h-product"><span class="num">1</span> Direct mail option</h2>
-          <div id="products" class="options" role="radiogroup" aria-labelledby="h-product"></div>
+          <div id="products" class="options" role="radiogroup" aria-labelledby="h-product"><p class="muted">Loading prices…</p></div>
           <p class="info" id="postage-note"></p>
         </section>
 
@@ -181,7 +182,7 @@
   </footer>
 
   <script src="js/config.js"></script>
-  <script src="js/zips.js"></script>
+  <script src="js/data.js"></script>
   <script src="js/calc.js"></script>
   <script src="js/app.js"></script>
 </body>

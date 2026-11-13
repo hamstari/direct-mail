@@ -15,15 +15,25 @@ A web page where home-improvement businesses build an insert or direct mailer, s
 
 **2 · Checkout** collects business, billing and payment preference (card link or invoice, sent after the proof is approved). **3 · Confirmation** shows the order number and a printable receipt.
 
-## Add your distribution ZIP codes
+## Update prices and ZIP codes (Google Sheets)
 
-Edit `js/zips.js`. Put one ZIP per line as `zip, city, county, homes`. You can copy four columns straight out of Excel or Google Sheets and paste them in (tabs work, and so do numbers like `6,200`). **The ZIPs in there now are samples.** The order you receive lists every ZIP the customer picked, with its homes.
+Everything that changes (prices, sizes, ZIP codes, fees, tax, mailing discounts, promo codes) lives in one Google Sheet. The calculator reads it each time a customer opens the page, so an edit shows on your website within about 5 minutes, with no files to upload.
 
-## Set your prices
+**One-time setup (about 5 minutes)**
+1. Upload `price-sheet-template.xlsx` to Google Drive, then open it with Google Sheets and use **File → Save as Google Sheets**.
+2. Click **Share** and set General access to **Anyone with the link: Viewer**. (Customers can see the prices on your site anyway. Only people you add as Editors can change them.)
+3. Copy the sheet's address from your browser and paste it into `googleSheet` in `js/config.js`.
+4. Open your calculator with `#check` at the end of the address (for example `yoursite.com/direct-mail/#check`). A panel shows what loaded and anything to fix.
 
-Edit `js/config.js`: products, sizes, price per home at each break, mailing discounts, setup fee, rush %, tax %, promo codes and contact details.
+**Day to day**: edit the sheet. The "Start here" tab explains each tab:
+- **Prices**: one row per option and size. The columns after Paper are price breaks: the header is a number of homes and each cell is the price per home. Add a row for a new size or option, add a column for a new price break, or delete a row to stop selling something. Keep prices as plain numbers with 3 decimals (0.187).
+- **ZIPs**: ZIP, City, County, Homes. Customers can only pick ZIPs listed here.
+- **Settings**: setup fee, sales tax %, rush %, minimum homes, and one row per mailing choice ("3 mailings discount %").
+- **Promos**: Code, Discount (`10%` off the ad or `$49` off the order), Description.
 
-> Only the Full Page Pop Out Insert at 10,000 homes ($0.187/home → $2,053.33 total with $49 setup and 7% tax) came from the live price sheet. **Every other rate, size, the rush % and the promo codes are placeholders.**
+If the sheet can't be reached or a tab is missing, the page uses the built-in prices in `js/data.js` so it never goes blank (and turns off promo codes), and `#check` tells you what went wrong. A brand-new option name shows with a plain drawing until it gets a description in `options` in `js/config.js`.
+
+To rebuild the template from `js/data.js`: `python3 tools/build-sheet-template.py`.
 
 ## Receive orders (Zapier or Make)
 
@@ -65,8 +75,10 @@ npm test    # pricing tests (Node 18+)
 
 - `index.html`: page layout (build, checkout, confirmation)
 - `css/styles.css`: styles (light/dark, mobile, print)
-- `js/config.js`: prices and settings
-- `js/zips.js`: your distribution ZIP codes and homes per ZIP
+- `js/config.js`: business details, Google Sheet link, order webhook, option descriptions
+- `js/data.js`: built-in prices and ZIPs (used until a Google Sheet is linked)
+- `price-sheet-template.xlsx`: starting point for your Google Sheet
+- `tools/build-sheet-template.py`: rebuilds the template from `js/data.js`
 - `js/calc.js`: pricing math (shared by the page and the tests)
 - `js/app.js`: page behavior
 - `embed-snippet.html`: code to paste into your website
