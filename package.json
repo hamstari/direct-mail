@@ -4,8 +4,10 @@
   "private": true,
   "description": "Direct mail print order calculator with ad sizes and online checkout.",
   "scripts": {
-    "test": "node --test tests/calc.test.js",
+    "test": "node --test tests/calc.test.js enroll-ahf/tests/enroll.test.js",
     "start": "npx --yes serve .",
-    "sync-backup": "node tools/sync-backup.js"
+    "sync-backup": "node tools/sync-backup.js",
+    "build:enroll": "node enroll-ahf/build.js",
+    "start:enroll": "npx --yes serve enroll-ahf"
   }
 }

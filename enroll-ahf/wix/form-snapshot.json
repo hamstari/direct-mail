@@ -1,0 +1,939 @@
+{
+ "formId": "5872b652-a4ff-401f-b02b-7f4f0799fc62",
+ "name": "Enrollment (FFC)",
+ "note": "Snapshot of the live Wix form (field keys, labels, options, show rules) taken 2026-11-17. Used by tests to keep the redesign in sync.",
+ "fields": [
+  {
+   "target": "how_did_you_hear_about_america_home_financial",
+   "label": "How did you hear about America Home Financial?",
+   "component": "DROPDOWN",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": false,
+   "options": [
+    "Internet",
+    "Email notification",
+    "Paper notification",
+    "Salesperson",
+    "AHF Call Center",
+    "Referral",
+    "Best Deals Book"
+   ]
+  },
+  {
+   "target": "form_field_0510",
+   "label": null,
+   "component": "CHECKBOX",
+   "inputType": "BOOLEAN",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "how_many_owners_are_there",
+   "label": "How many owners are there?",
+   "component": "DROPDOWN",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": [
+    "1",
+    "2",
+    "3",
+    "4"
+   ]
+  },
+  {
+   "target": "form_field_511",
+   "label": null,
+   "component": "CHECKBOX",
+   "inputType": "BOOLEAN",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "form_field_512",
+   "label": null,
+   "component": "CHECKBOX",
+   "inputType": "BOOLEAN",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "signature_a427",
+   "label": "Owner 3 Signature",
+   "component": "SIGNATURE",
+   "inputType": "WIX_FILE",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "signature_afdc",
+   "label": "Owner 4 Signature",
+   "component": "SIGNATURE",
+   "inputType": "WIX_FILE",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "signature_6f86",
+   "label": "Owner 2 Signature",
+   "component": "SIGNATURE",
+   "inputType": "WIX_FILE",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "signature_37ce",
+   "label": "Owner 1 Signature",
+   "component": "SIGNATURE",
+   "inputType": "WIX_FILE",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "email_79a5_1",
+   "label": "Owner 2: Email",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "personal_phone_number",
+   "label": "Owner 2: Mobile Phone Number",
+   "component": "PHONE_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "percentage_of_business_owned",
+   "label": "Owner 2: Percentage of Business Owned",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "date_of_birth_1",
+   "label": "Owner 2: Date of Birth",
+   "component": "DATE_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "social_security_number",
+   "label": "Owner 1: Social Security Number",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "email_79a5_2",
+   "label": "Owner 1: Email",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "personal_phone_number_1",
+   "label": "Owner 1: Mobile Phone Number",
+   "component": "PHONE_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "percentage_of_business_owned_1",
+   "label": "Owner 1: Percentage of Business Owned",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "date_of_birth_2",
+   "label": "Owner 1: Date of Birth",
+   "component": "DATE_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "social_security_number_1",
+   "label": "Owner 2: Social Security Number",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "email_79a5_3",
+   "label": "Owner 3: Email",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "personal_phone_number_2",
+   "label": "Owner 3: Mobile Phone Number",
+   "component": "PHONE_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "percentage_of_business_owned_2",
+   "label": "Owner 3: Percentage of Business Owned",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "date_of_birth_3",
+   "label": "Owner 3: Date of Birth",
+   "component": "DATE_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "social_security_number_2",
+   "label": "Owner 3: Social Security Number",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "social_security_number_3",
+   "label": "Owner 4: Social Security Number",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "date_of_birth_4",
+   "label": "Owner 4: Date of Birth",
+   "component": "DATE_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "percentage_of_business_owned_3",
+   "label": "Owner 4: Percentage of Business Owned",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "personal_phone_number_3",
+   "label": "Owner 4: Mobile Phone Number",
+   "component": "PHONE_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "email_79a5_4",
+   "label": "Owner 4: Email",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "dba",
+   "label": "If you have a DBA, please list it here",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "business_structure",
+   "label": "Business Structure",
+   "component": "DROPDOWN",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": [
+    "Corporation",
+    "Limited Liability Corporation",
+    "Partnership",
+    "Sole Proprietorship"
+   ]
+  },
+  {
+   "target": "year_business_started",
+   "label": "Year Business Started",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "main_company_phone_number",
+   "label": "Main Company Phone Number",
+   "component": "PHONE_INPUT",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "company_website",
+   "label": "Company Website",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "job_title",
+   "label": "Job Title",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "e_mail_to_receive_credit_decisions",
+   "label": "E-mail to receive credit decisions",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "which_state_do_you_primarily_do_business_in",
+   "label": "What state is this License and Registration number for?",
+   "component": "DROPDOWN",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": [
+    "Alabama",
+    "Alaska",
+    "Arizona",
+    "Arkansas",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "Delaware",
+    "Florida",
+    "Georgia",
+    "Hawaii",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Iowa",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Maine",
+    "Maryland",
+    "Massachusetts",
+    "Michigan",
+    "Minnesota",
+    "Mississippi",
+    "Missouri",
+    "Montana",
+    "Nebraska",
+    "Nevada",
+    "New Hampshire",
+    "New Jersey",
+    "New Mexico",
+    "New York",
+    "North Carolina",
+    "North Dakota",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Pennsylvania",
+    "Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Vermont",
+    "Virginia",
+    "Washington",
+    "West Virginia",
+    "Wisconsin",
+    "Wyoming"
+   ]
+  },
+  {
+   "target": "contractor_license_registration_number",
+   "label": "Contractor License / Registration Number",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "what_products_or_services_do_you_sell",
+   "label": "What Products or Services Do You Sell?",
+   "component": "DROPDOWN",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": [
+    "I don't see my industry listed",
+    "Addition",
+    "Aluminum Pool Enclosures",
+    "Awnings / Patio Cover",
+    "Basement",
+    "Bathroom Remodeling",
+    "Boat Docks & Piers",
+    "Brick & Stone Work",
+    "Cabinets & Refacing",
+    "Carpet & Flooring",
+    "Chimney / Chimney Liner",
+    "Concrete & Paving",
+    "Custom Closets",
+    "Deck",
+    "Drain Line Repair / Replacement",
+    "Drywall",
+    "Electrical Work",
+    "Exterior",
+    "Fencing",
+    "Foundation / Seawall Repair",
+    "Garage Doors",
+    "Garage Floor Epoxy",
+    "Gas Work",
+    "Gazebo",
+    "Generator",
+    "Gutters / Gutter Protection",
+    "HVAC System",
+    "Home Theater (Indoor)",
+    "Hurricane Protection",
+    "Insulation",
+    "Kitchen Remodeling",
+    "Lanai's and Screen Enclosures",
+    "Landscaping",
+    "Lighting - Indoor",
+    "Painting",
+    "Pools",
+    "Windows & Doors"
+   ]
+  },
+  {
+   "target": "does_your_company_install_the_products_they_sell_if_they_require",
+   "label": "Does your Business install the products they sell if they require installation?",
+   "component": "RADIO_GROUP",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": [
+    "Yes",
+    "No"
+   ]
+  },
+  {
+   "target": "list_the_manufacturer_of_these_products",
+   "label": "List the manufacturer of these products",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "do_you_subcontract",
+   "label": "Does your business subcontract?",
+   "component": "DROPDOWN",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": [
+    "Yes",
+    "No"
+   ]
+  },
+  {
+   "target": "average_annual_residential_sales",
+   "label": "Total Number of Sales per month",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "average_sale_price",
+   "label": "Average Sale Price ($)",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "if_you_would_like_to_add_more_products_and_services_please_list",
+   "label": "If you would like to add more products and services, please list them here. ",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "file_upload",
+   "label": "File upload",
+   "component": "FILE_UPLOAD",
+   "inputType": "WIX_FILE",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "which_documents_are_you_ready_to_upload",
+   "label": "Which documents are you ready to upload?",
+   "component": "CHECKBOX_GROUP",
+   "inputType": "ARRAY",
+   "required": false,
+   "hiddenByDefault": false,
+   "options": [
+    "Business Liability Insurance/Bonding (required for home improvement contractors)",
+    "Business License/Registration (required depending on state)",
+    "Contractor's/Installer's License (required depending on state)",
+    "Voided Business Check (required)"
+   ]
+  },
+  {
+   "target": "form_field_9e91",
+   "label": null,
+   "component": "CHECKBOX",
+   "inputType": "BOOLEAN",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "company_name_a1d8",
+   "label": "Company name",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "if_you_are_licensed_to_do_business_in_more_than_one_state_please",
+   "label": "If you are licensed to do business in more than one state, please list the state and it's corresponding license #.",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "first_and_last_name",
+   "label": "First and Last Name",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "first_and_last_name_1",
+   "label": "Owner 1: First and Last Name",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "first_and_last_name_2",
+   "label": "Owner 2: First and Last Name",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "first_and_last_name_3",
+   "label": "Owner 3: First and Last Name",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "first_and_last_name_4",
+   "label": "Owner 4: First and Last Name",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "business_email",
+   "label": "Business Email",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "business_address",
+   "label": "Business address",
+   "component": "MULTILINE_ADDRESS",
+   "inputType": "ADDRESS",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "home_address_4",
+   "label": "Owner 4: Home Address\n",
+   "component": "MULTILINE_ADDRESS",
+   "inputType": "ADDRESS",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "multi_line_address_eea5",
+   "label": "Owner 1: Home Address",
+   "component": "MULTILINE_ADDRESS",
+   "inputType": "ADDRESS",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "multi_line_address_6e5b",
+   "label": "Owner 2: Home Address",
+   "component": "MULTILINE_ADDRESS",
+   "inputType": "ADDRESS",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "multi_line_address_7eb5",
+   "label": "Owner 3:  Home Address",
+   "component": "MULTILINE_ADDRESS",
+   "inputType": "ADDRESS",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "short_answer_d15c",
+   "label": "Please list your current financing programs",
+   "component": "TEXT_INPUT",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "list_what_percentage_your_business_subcontracts",
+   "label": "List what percentage your business subcontracts",
+   "component": "DROPDOWN",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": [
+    "10%",
+    "20%",
+    "30%",
+    "40%",
+    "50%",
+    "60%",
+    "70%",
+    "80%",
+    "90%",
+    "100%"
+   ]
+  },
+  {
+   "target": "number_of_locations",
+   "label": "Number of Locations",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": true,
+   "hiddenByDefault": false,
+   "options": null
+  },
+  {
+   "target": "amount_of_sales_financed_in_months",
+   "label": "Number of sales financed per month",
+   "component": "NUMBER_INPUT",
+   "inputType": "NUMBER",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  },
+  {
+   "target": "do_you_currently_have_any_financing_programs",
+   "label": "Do you currently have any financing programs?",
+   "component": "DROPDOWN",
+   "inputType": "STRING",
+   "required": false,
+   "hiddenByDefault": false,
+   "options": [
+    "Yes",
+    "No"
+   ]
+  },
+  {
+   "target": "form_field_86ab",
+   "label": null,
+   "component": "CHECKBOX",
+   "inputType": "BOOLEAN",
+   "required": false,
+   "hiddenByDefault": true,
+   "options": null
+  }
+ ],
+ "rules": [
+  {
+   "when": [
+    {
+     "field": "which_documents_are_you_ready_to_upload",
+     "operator": "any",
+     "value": [
+      "Copy of Drivers License (required)",
+      "Copy of Contract / Work Order (blank acceptable)",
+      "Voided Business Check (required)",
+      "Voided Business Check",
+      "Contractor's/Installer's License (required depending on state)",
+      "Business License/Registration (required depending on state)",
+      "Business Liability Insurance/Bonding (required for home improvement contractors)"
+     ]
+    }
+   ],
+   "shows": [
+    "file_upload"
+   ]
+  },
+  {
+   "when": [
+    {
+     "field": "short_answer_d15c",
+     "operator": "notEmpty",
+     "value": true
+    }
+   ],
+   "shows": [
+    "amount_of_sales_financed_in_months"
+   ]
+  },
+  {
+   "when": [
+    {
+     "field": "do_you_subcontract",
+     "operator": "any",
+     "value": [
+      "Yes"
+     ]
+    }
+   ],
+   "shows": [
+    "list_what_percentage_your_business_subcontracts"
+   ]
+  },
+  {
+   "when": [
+    {
+     "field": "how_many_owners_are_there",
+     "operator": "equal",
+     "value": "1"
+    }
+   ],
+   "shows": [
+    "date_of_birth_2",
+    "email_79a5_2",
+    "first_and_last_name_1",
+    "form_field_0510",
+    "multi_line_address_eea5",
+    "percentage_of_business_owned_1",
+    "personal_phone_number_1",
+    "signature_37ce",
+    "social_security_number"
+   ]
+  },
+  {
+   "when": [
+    {
+     "field": "how_many_owners_are_there",
+     "operator": "equal",
+     "value": "2"
+    }
+   ],
+   "shows": [
+    "date_of_birth_1",
+    "date_of_birth_2",
+    "email_79a5_1",
+    "email_79a5_2",
+    "first_and_last_name_1",
+    "first_and_last_name_2",
+    "form_field_0510",
+    "form_field_511",
+    "multi_line_address_6e5b",
+    "multi_line_address_eea5",
+    "percentage_of_business_owned",
+    "percentage_of_business_owned_1",
+    "personal_phone_number",
+    "personal_phone_number_1",
+    "signature_37ce",
+    "signature_6f86",
+    "social_security_number",
+    "social_security_number_1"
+   ]
+  },
+  {
+   "when": [
+    {
+     "field": "how_many_owners_are_there",
+     "operator": "equal",
+     "value": "3"
+    }
+   ],
+   "shows": [
+    "date_of_birth_1",
+    "date_of_birth_2",
+    "date_of_birth_3",
+    "email_79a5_1",
+    "email_79a5_2",
+    "email_79a5_3",
+    "first_and_last_name_1",
+    "first_and_last_name_2",
+    "first_and_last_name_3",
+    "form_field_0510",
+    "form_field_511",
+    "form_field_512",
+    "multi_line_address_6e5b",
+    "multi_line_address_7eb5",
+    "multi_line_address_eea5",
+    "percentage_of_business_owned",
+    "percentage_of_business_owned_1",
+    "percentage_of_business_owned_2",
+    "personal_phone_number",
+    "personal_phone_number_1",
+    "personal_phone_number_2",
+    "signature_37ce",
+    "signature_6f86",
+    "signature_a427",
+    "social_security_number",
+    "social_security_number_1",
+    "social_security_number_2"
+   ]
+  },
+  {
+   "when": [
+    {
+     "field": "how_many_owners_are_there",
+     "operator": "equal",
+     "value": "4"
+    }
+   ],
+   "shows": [
+    "date_of_birth_1",
+    "date_of_birth_2",
+    "date_of_birth_3",
+    "date_of_birth_4",
+    "email_79a5_1",
+    "email_79a5_2",
+    "email_79a5_3",
+    "email_79a5_4",
+    "first_and_last_name_1",
+    "first_and_last_name_2",
+    "first_and_last_name_3",
+    "first_and_last_name_4",
+    "form_field_0510",
+    "form_field_511",
+    "form_field_512",
+    "form_field_9e91",
+    "home_address_4",
+    "multi_line_address_6e5b",
+    "multi_line_address_7eb5",
+    "multi_line_address_eea5",
+    "percentage_of_business_owned",
+    "percentage_of_business_owned_1",
+    "percentage_of_business_owned_2",
+    "percentage_of_business_owned_3",
+    "personal_phone_number",
+    "personal_phone_number_1",
+    "personal_phone_number_2",
+    "personal_phone_number_3",
+    "signature_37ce",
+    "signature_6f86",
+    "signature_a427",
+    "signature_afdc",
+    "social_security_number",
+    "social_security_number_1",
+    "social_security_number_2",
+    "social_security_number_3"
+   ]
+  },
+  {
+   "when": [
+    {
+     "field": "do_you_currently_have_any_financing_programs",
+     "operator": "any",
+     "value": [
+      "Yes"
+     ]
+    }
+   ],
+   "shows": [
+    "amount_of_sales_financed_in_months",
+    "short_answer_d15c"
+   ]
+  }
+ ]
+}

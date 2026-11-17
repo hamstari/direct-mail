@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contractor Enrollment | America Home Financial</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="src/enroll.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <img class="logo" id="logo" alt="America Home Financial" width="170" height="73">
+      <div class="masthead-text">
+        <p class="eyebrow">Contractor program</p>
+        <h1>Enroll in the AHF Finance Program</h1>
+        <p class="lede">Offer your customers financing. Apply once, in five short steps.</p>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="rail" aria-label="Application steps">
+        <ol id="steps"></ol>
+        <div class="rail-help" id="help"></div>
+      </nav>
+
+      <main class="panel">
+        <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+        <p class="step-count" id="step-count"></p>
+        <div id="banner" class="banner" hidden></div>
+        <form id="enroll" novalidate autocomplete="on"></form>
+        <section id="done" class="done" hidden tabindex="-1"></section>
+      </main>
+    </div>
+
+    <footer class="foot">
+      <span class="lock" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/></svg>
+      </span>
+      Your information is sent over an encrypted connection and used only to review your application.
+    </footer>
+  </div>
+
+  <script src="src/config.js"></script>
+  <script src="src/fields.js"></script>
+  <script src="src/payload.js"></script>
+  <script src="src/enroll.js"></script>
+</body>
+</html>
